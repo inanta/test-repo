@@ -1,0 +1,83 @@
+---
+format: json
+slug: _api/:resource
+method: post
+---
+
+{%- liquid
+	assign response = '{ "error": true }' | parse_json
+
+	assign now = 'now' | strftime: '%Y-%m-%dT%H:%M:%S.%LZ'
+	assign key = context.params.resource | append: resource | append: context.params
+-%}
+
+{%- cache key, expire: 1 -%}
+{%- liquid
+	case context.params.resource 
+		when 'sites'
+			graphql sites = 'modules/homepage/get_all_sites'
+
+			hash_assign response['error'] = false
+			hash_assign response['sites'] = sites.ooc.rs
+		when 'search'
+			assign search_query_size = context.params.query | size
+			assign ajax_min_search_characters = 3
+
+			if context.constants.ajax_min_search_characters != blank
+				assign ajax_min_search_characters = context.constants.ajax_min_search_characters | abs
+			endif
+
+			comment
+				If search term / key length >= "context.constants.ajax_min_search_characters" then do search
+			endcomment
+
+			if search_query_size >= ajax_min_search_characters
+				function search_filters = 'modules/homepage/_functions/create_search_filters', query: context.params.query
+				graphql products = 'modules/homepage/search_product', filter: search_filters, page: 1
+
+				for product_ in products.records.results
+					assign p_slug = product_.primary_catalog[0].props.paths.slugs | join: '/'
+					assign href = '/' | append: p_slug | append: '/' | append: product_.slug
+
+					if p_slug == blank
+						assign href = 'javascript:;'
+					endif
+
+					hash_assign product_['href'] = href
+					hash_assign product_['image'] = product_.image[0] | downcase | asset_url
+					hash_assign product_['short_description'] = product_.custom_fields[0].props.mini_product_desc  | markdown
+
+					comment
+						Remove unneeded data for small JSON result
+					endcomment
+					
+					assign product_ = product_ | remove_hash_key: 'id'
+					assign product_ = product_ | remove_hash_key: 'created_at'
+					assign product_ = product_ | remove_hash_key: 'custom_fields'
+					assign product_ = product_ | remove_hash_key: 'properties'
+					assign product_ = product_ | remove_hash_key: 'primary_catalog'
+
+					hash_assign products.records.results[forloop.index0] = product_
+				endfor
+
+            	hash_assign response['products'] = products.records.results
+				hash_assign response['total_entries'] = products.records.total_entries
+				hash_assign response['error'] = false
+			else
+				hash_assign response['message'] = 'Search query length must be greater than 3 characters'
+			endif
+		when 'directory-tree'
+			response_headers '{"Access-Control-Allow-Origin": "*"}'
+			
+			assign p_GetSiteSettings = 'modules/_admin/_functions/GetSiteSettings'
+			function SiteSettings = p_GetSiteSettings, a: 'admin'
+
+			hash_assign response['tree'] = SiteSettings[0].value
+		else 
+			response_status 400 
+			hash_assign response['message'] = 'Invalid endpoint'
+	endcase 
+-%}
+
+{{ response }}
+{%- endcache -%}
