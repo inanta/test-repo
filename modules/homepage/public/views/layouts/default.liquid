@@ -1,0 +1,47 @@
+---
+metadata:
+  name: Default
+  generator: ooc
+  indexed_at: '2022-04-01 06:28:51'
+  parent_folder: modules/homepage/public/views/layouts/
+---
+<!DOCTYPE html>
+<html>
+    <head>
+		{% include 'modules/homepage/_contentholders/head-scripts' %}
+		{% yield 'page_title' %}
+        <meta content="Sydney Commercial Kitchen" property="og:title" />
+        <meta content="{{'modules/homepage/images/sck/globex.jpg' | asset_url}}" property="og:image:type" />      
+        <meta content="Saving you time and money on all catering equipment. Call us for personalised service on 02 9999 5800 or 1300 881 119" property="og:description" />
+		<script>
+			window['_fs_debug'] = false;
+			window['_fs_host'] = 'fullstory.com';
+			window['_fs_org'] = 'JY2E4';
+			window['_fs_namespace'] = 'FS';
+			(function(m,n,e,t,l,o,g,y){
+				if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
+				g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s);};g.q=[];
+				o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
+				y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
+				g.identify=function(i,v,s){g(l,{uid:i},s);if(v)g(l,v,s)};g.setUserVars=function(v,s){g(l,v,s)};g.event=function(i,v,s){g('event',{n:i,p:v},s)};
+				g.shutdown=function(){g("rec",!1)};g.restart=function(){g("rec",!0)};
+				g.consent=function(a){g("consent",!arguments.length||a)};
+				g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
+				g.clearUserCookie=function(){};
+			})(window,document,window['_fs_namespace'],'script','user');
+		</script>
+		{% include 'modules/homepage/_contentholders/css-general' %}
+    </head>
+    <body>
+        <!-- Google Tag Manager for Rowan (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-58TLK4H" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->    
+        {% include 'modules/homepage/_contentholders/header' %}
+		<section class="section-blog">
+			<div class="container">
+				{{ content_for_layout }}
+			</div>
+        </section>
+        {% include 'modules/homepage/_contentholders/footer' %}       
+    </body>
+</html>
