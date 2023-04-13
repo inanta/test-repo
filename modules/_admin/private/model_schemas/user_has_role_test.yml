@@ -1,0 +1,6 @@
+name: user_has_role_test
+properties:
+  - name: user_id
+    type: integer
+  - name: role_id
+    type: integer

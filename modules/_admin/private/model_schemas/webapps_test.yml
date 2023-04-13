@@ -1,0 +1,64 @@
+name: webapps_test
+properties:
+  - name: name
+    type: string
+  - name: slug
+    type: string
+  - name: dynamicslugs
+    type: boolean
+    options:
+      default: true
+  - name: dslugs
+    type: boolean
+    options:
+      default: false
+  - name: frontendpermissions
+    type: string
+  - name: metafields
+    type: string
+  - name: show_in_menu
+    type: boolean
+  - name: allow_relationships
+    type: boolean
+  - name: readonly
+    type: boolean
+    options:
+      default: false
+  - name: disabledelete
+    type: boolean
+    options:
+      default: false
+  - name: hidden
+    type: boolean
+  - name: model_schema_name
+    type: string
+  - name: model_schema_id
+    type: integer
+  - name: configuration
+    type: string
+  - name: download_expiry
+    type: integer
+  - name: api_auth_policy
+    type: string
+  - name: dd_auth_policy
+    type: string
+  - name: dd_page
+    type: string
+  - name: type
+    type: string
+  - name: view
+    type: array
+  - name: granularview
+    type: boolean
+  - name: granularviewcolumns
+    type: boolean
+    options:
+      default: true
+  - name: webhook
+    type: string
+  - name: email
+    type: string
+  - name: cachecontrol
+    type: array
+  - name: remotetable_slug
+    type: string
